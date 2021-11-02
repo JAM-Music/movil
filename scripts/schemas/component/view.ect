@@ -1,0 +1,13 @@
+import React from 'react';
+import {Text} from 'react-native';
+<% if @style : %>
+import style from './<%- @name %>.style';
+
+<% end %>
+export type <%- @name %>TemplateProps = {};
+
+const Template: React.FC<<%- @name %>TemplateProps> = () => {
+  return <Text><%- @name %></Text>;
+};
+
+export default Template;

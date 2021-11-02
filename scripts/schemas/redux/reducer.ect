@@ -1,0 +1,22 @@
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+interface State {
+  data: any;
+}
+
+const initialState: State = {
+  data: undefined,
+};
+
+export const <%- @name %>Slice = createSlice({
+  name: '<%- @name %>',
+  initialState,
+  reducers: {
+    set: (state, action: PayloadAction<number>) => {
+      state.data = action.payload;
+    },
+  },
+});
+
+export const <%- @name %>Actions = <%- @name %>Slice.actions;
+export const <%- @name %>Reducer = <%- @name %>Slice.reducer;

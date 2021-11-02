@@ -1,0 +1,6 @@
+import type {RootState} from '_redux';
+import {<%- @name %>ModuleName} from './types';
+
+export function <%- @name %>Selector(state: RootState) {
+  return state[<%- @name %>ModuleName];
+}

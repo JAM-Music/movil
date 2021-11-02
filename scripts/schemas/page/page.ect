@@ -1,0 +1,13 @@
+import React from 'react';
+import {Text} from 'react-native';
+<% if @style : %>
+import style from './<%- @name %>.style';
+
+<% end %>
+export type <%- @name %>Props = {}
+
+const <%- @name %>: React.FC<<%- @name %>Props> = () => {
+  return <Text>Screen <%- @name %></Text>;
+};
+
+export defuault <%- @name %>;

@@ -1,0 +1,16 @@
+import {configureStore} from '@reduxjs/toolkit';
+<% for folder in @folders : %>
+import {<%- folder.reducer %>, <%- folder.module %>} from './<%- folder.name %>';
+<% end %>
+
+export const store = configureStore({
+  reducer: {
+<% for folder in @folders : %>
+    [<%- folder.module %>]: <%- folder.reducer %>,
+<% end %>
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
