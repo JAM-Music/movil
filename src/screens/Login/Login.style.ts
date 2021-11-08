@@ -1,0 +1,31 @@
+/*Login component style file*/
+import {StyleSheet} from 'react-native';
+import R from '_src/assets/R';
+export default StyleSheet.create({
+  content: {
+    flexGrow: 1,
+  },
+  main: {
+    flex: 1,
+    paddingTop: '40%',
+  },
+  title: {
+    color: R.colors.SECONDARY,
+  },
+  form: {
+    marginTop: 50,
+  },
+  registerLine: {
+    flexDirection: 'row',
+  },
+  registerQuestion: {
+    marginRight: 10,
+  },
+  register: {
+    color: R.colors.LINKS,
+  },
+  error: {
+    color: R.colors.ERROR,
+    marginBottom: 10,
+  },
+});

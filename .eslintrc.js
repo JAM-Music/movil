@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   extends: '@react-native-community',
+  plugins: ["jest"],
   settings: {
     'import/resolver': {
       alias: {

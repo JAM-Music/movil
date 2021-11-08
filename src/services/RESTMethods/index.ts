@@ -5,6 +5,7 @@ export const sessionStorageKey = '@Escuela/SessionId';
 const _cache: {session?: string} = {};
 
 export async function manageResponse<T>(
+  // eslint-disable-next-line no-undef
   res: Response,
 ): Promise<CustomResponse<T>> {
   let data;
@@ -34,7 +35,7 @@ export async function genericRequest<T>(
   };
   const sessionId = await getSession();
   if (sessionId) {
-    headers.Authorization = `Bearer: ${sessionId}`;
+    headers.Authorization = `Bearer ${sessionId}`;
   }
   const options: {[key: string]: string | typeof headers} = {
     method,
@@ -44,25 +45,25 @@ export async function genericRequest<T>(
   if (body) {
     options.body = JSON.stringify(body);
   }
-  return fetch(formatUrl(resource), options).then(
-    res => manageResponse<T>(res),
+  return fetch(formatUrl(resource), options).then(res =>
+    manageResponse<T>(res),
   );
 }
 
 export async function post<T>(resource = '/', body = {}) {
-  return genericRequest('POST', resource, body);
+  return genericRequest<T>('POST', resource, body);
 }
 
 export async function patch<T>(resource = '/', body = {}) {
-  return genericRequest('PATCH', resource, body);
+  return genericRequest<T>('PATCH', resource, body);
 }
 
 export async function put<T>(resource = '/', body = {}) {
-  return genericRequest('PUT', resource, body);
+  return genericRequest<T>('PUT', resource, body);
 }
 
 export async function del<T>(resource = '/', body = {}) {
-  return genericRequest('DELETE', resource, body);
+  return genericRequest<T>('DELETE', resource, body);
 }
 
 export async function get<T>(resource = '/') {
