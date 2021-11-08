@@ -16,6 +16,7 @@ const DashboardNavigation: FC<{}> = () => {
         tabBarStyle: {
           borderRadius: 30,
           width: '95%',
+          borderTopWidth: 0,
           alignSelf: 'center',
           marginBottom: 20,
           backgroundColor: 'rgba(64, 64, 64,0.3)',
