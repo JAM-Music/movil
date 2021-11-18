@@ -9,4 +9,5 @@ export default {
   NOTIFICATION: '#d225ac',
   LINKS: '#5784ff',
   ERROR: '#f77765',
+  BG_TRANSPARENT: 'rgba(24, 25, 26, 0.90)',
 };

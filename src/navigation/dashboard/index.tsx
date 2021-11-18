@@ -5,8 +5,10 @@ import R from '_src/assets/R';
 import {Icon} from 'react-native-elements';
 import Search from '_src/screens/Search';
 import Profile from '_src/screens/Profile';
+import PlaylistList from '_src/screens/PlaylistList';
+import {DashboardScreens} from '_src/utils/types/Screens';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<DashboardScreens>();
 
 const DashboardNavigation: FC<{}> = () => {
   return (
@@ -33,6 +35,15 @@ const DashboardNavigation: FC<{}> = () => {
         options={{
           tabBarIcon: ({color}) => (
             <Icon name="home" tvParallaxProperties color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="playlist"
+        component={PlaylistList}
+        options={{
+          tabBarIcon: ({color}) => (
+            <Icon name="queue-music" tvParallaxProperties color={color} />
           ),
         }}
       />

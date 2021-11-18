@@ -17,4 +17,25 @@ export const Theme = {
     },
     selectionColor: R.colors.BORDER,
   },
+  ButtonGroup: {
+    buttonStyle: {
+      borderWidth: 0,
+      backgroundColor: R.colors.SECONDARY,
+    },
+    containerStyle: {
+      borderWidth: 0,
+    },
+    textStyle: {
+      color: R.colors.TEXT,
+      fontSize: 15,
+    },
+    selectedButtonStyle: {
+      backgroundColor: R.colors.PRIMARY,
+      borderWidth: 0,
+    },
+    innerBorderStyle: {
+      backgroundColor: R.colors.BG_TRANSPARENT,
+      borderWidth: 0,
+    },
+  },
 };

@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: '@react-native-community',
-  plugins: ["jest"],
+  plugins: ['jest'],
   settings: {
     'import/resolver': {
       alias: {
@@ -20,5 +20,8 @@ module.exports = {
         extensions: ['.js', '.jsx', '.json', '.css'],
       },
     },
+  },
+  globals: {
+    JSX: true,
   },
 };

@@ -33,7 +33,7 @@ const TrackRow: React.FC<TrackRowProps> = ({image, title, artist}) => {
         type="material"
         name="more-horiz"
         tvParallaxProperties
-        color={R.colors.TEXT}
+        color={R.colors.SECONDARY}
       />
     </View>
   );

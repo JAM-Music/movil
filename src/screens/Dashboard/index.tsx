@@ -1,17 +1,24 @@
+import {NavigationProp} from '@react-navigation/core';
 import React from 'react';
 import {View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import R from '_src/assets/R';
 import Content from '_src/components/Content';
+import NoPlaylist from '_src/components/NoPlaylist';
 import Thumbnail from '_src/components/Thumbnail';
 import TrackRow from '_src/components/TrackRow';
-import {useUser} from '_src/hooks';
+import {usePlaylists, useUser} from '_src/hooks';
+import {RootScreens} from '_src/utils/types/Screens';
 import style from './Dashboard.style';
 
-export type DashboardProps = {};
+export type DashboardProps = {
+  navigation: NavigationProp<RootScreens>;
+};
 
-const Dashboard: React.FC<DashboardProps> = () => {
+const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
   const {fullName} = useUser();
+  const {playlists} = usePlaylists();
+
   return (
     <Content>
       <View style={style.topBar}>
@@ -61,49 +68,19 @@ const Dashboard: React.FC<DashboardProps> = () => {
       <Text h3 style={style.playlist}>
         Playlists
       </Text>
+      {!playlists.length && <NoPlaylist />}
       <View style={style.playlistContainer}>
-        <Thumbnail
-          style={style.thumbnail}
-          image={{
-            uri: 'https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          title="Playlist 1"
-        />
-        <Thumbnail
-          style={style.thumbnail}
-          image={{
-            uri: 'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          title="Playlist 2"
-        />
-        <Thumbnail
-          style={style.thumbnail}
-          image={{
-            uri: 'https://images.pexels.com/photos/351265/pexels-photo-351265.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          title="Playlist 3"
-        />
-        <Thumbnail
-          style={style.thumbnail}
-          image={{
-            uri: 'https://images.pexels.com/photos/33597/guitar-classical-guitar-acoustic-guitar-electric-guitar.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          title="Playlist 4"
-        />
-        <Thumbnail
-          style={style.thumbnail}
-          image={{
-            uri: 'https://images.pexels.com/photos/33597/guitar-classical-guitar-acoustic-guitar-electric-guitar.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          title="Playlist 4"
-        />
-        <Thumbnail
-          style={style.thumbnail}
-          image={{
-            uri: 'https://images.pexels.com/photos/33597/guitar-classical-guitar-acoustic-guitar-electric-guitar.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          }}
-          title="Playlist 4"
-        />
+        {playlists.slice(0, 10).map(playlist => (
+          <Thumbnail
+            key={playlist._id}
+            style={style.thumbnail}
+            image={{
+              uri: playlist.image,
+            }}
+            title={playlist.title}
+            onPress={() => navigation.navigate('playlistDetail', {playlist})}
+          />
+        ))}
       </View>
     </Content>
   );
