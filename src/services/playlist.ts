@@ -1,7 +1,13 @@
 import {ImageURISource} from 'react-native';
 import {backendURL} from '_src/config/backend';
 import {Playlist} from '_src/utils/types/Playlist';
-import {CustomResponse, get, getSession, manageResponse} from './RESTMethods';
+import {
+  CustomResponse,
+  get,
+  getSession,
+  manageResponse,
+  post,
+} from './RESTMethods';
 
 const playlistURL = '/playlists';
 
@@ -51,4 +57,8 @@ export async function getPlaylist(id: string) {
     },
   }));
   return {...res, data: {...res.data, songs}};
+}
+
+export async function addSongToPlayList(song: string, playList: string) {
+  await post<Playlist>(`${playlistURL}/${playList}/song/${song}`);
 }

@@ -4,9 +4,11 @@ import {
   createPlaylist,
   getPlaylists,
   getPlaylist,
+  addSongToPlayList,
 } from '_src/services/playlist';
 import {PlaylistsActions, PlaylistsSelector} from '_src/store/playlists';
 import {Playlist} from '_src/utils/types/Playlist';
+import {Song} from '_src/utils/types/Songs';
 import {useAppDispatch, useAppSelector} from '.';
 
 export function usePlaylists() {
@@ -57,5 +59,18 @@ export function usePlaylistSongs(id?: string) {
       .finally(() => setLoading(false));
   }, [id]);
 
-  return {...playlist, loading};
+  const addSong = useCallback(
+    async (song: Song) => {
+      if (!id || !song._id) {
+        return;
+      }
+      await addSongToPlayList(song._id, id);
+      const tempPlaylist = {...playlist};
+      tempPlaylist.songs = [...(tempPlaylist.songs || []), song];
+      setPlaylist(tempPlaylist);
+    },
+    [id],
+  );
+
+  return {...playlist, loading, addSong};
 }
