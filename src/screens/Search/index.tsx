@@ -17,7 +17,7 @@ import {
   Artist as ArtistType,
   Song,
 } from '_src/utils/types/Songs';
-// import style from './Search.style';
+import style from './Search.style';
 
 export type SearchProps = {
   navigation: NavigationProp<DashboardScreens>;
@@ -30,28 +30,16 @@ const Search: React.FC<SearchProps> = ({navigation}) => {
     <Content>
       <SearchBar search={search} />
       {noFound && (
-        <Text
-          style={{
-            fontSize: 18,
-            color: R.colors.BORDER,
-            marginTop: 20,
-            textAlign: 'center',
-          }}>
-          No encontramos lo que buscabas :(
-        </Text>
+        <Text style={style.noFoundMsg}>No encontramos lo que buscabas :(</Text>
       )}
       {noSearch && (
-        <View style={{marginTop: 20}}>
+        <View style={style.searchMsgWrapper}>
           <Icon
             name="arrow-upward"
             tvParallaxProperties
             color={R.colors.PRIMARY}
           />
-          <Text
-            style={{
-              fontSize: 18,
-              textAlign: 'center',
-            }}>
+          <Text style={style.searchMsg}>
             Escribe en el recuadro para buscar
           </Text>
         </View>

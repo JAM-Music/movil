@@ -13,20 +13,10 @@ export type TrackRowProps = {
 
 const TrackRow: React.FC<TrackRowProps> = ({image, title, artist}) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: R.colors.BORDER,
-        paddingVertical: 10,
-        alignItems: 'center',
-      }}>
-      <Image
-        style={{aspectRatio: 1, width: 45, borderRadius: 5, marginRight: 10}}
-        source={image}
-      />
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text style={{}}>{title}</Text>
+    <View style={style.row}>
+      <Image style={style.image} source={image} />
+      <View style={style.textWrapper}>
+        <Text>{title}</Text>
         <Text style={{color: R.colors.BORDER}}>{artist}</Text>
       </View>
       <Icon

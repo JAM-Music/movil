@@ -7,4 +7,7 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  title: {marginBottom: 20},
+  cancelButton: {width: '90%'},
+  buttonsWrapper: {marginTop: 20},
 });

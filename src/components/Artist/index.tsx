@@ -11,11 +11,9 @@ export type ArtistProps = {
 
 const Artist: React.FC<ArtistProps> = ({image, name, onPress}) => {
   return (
-    <Pressable
-      onPress={onPress}
-      style={{flexDirection: 'row', alignItems: 'center', paddingVertical: 10}}>
-      <Image source={image} style={{height: 50, width: 50, borderRadius: 25}} />
-      <Text style={{marginLeft: 5, fontSize: 14}}>{name}</Text>
+    <Pressable onPress={onPress} style={style.wrapper}>
+      <Image source={image} style={style.image} />
+      <Text style={style.name}>{name}</Text>
     </Pressable>
   );
 };

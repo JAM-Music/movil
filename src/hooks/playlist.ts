@@ -64,12 +64,12 @@ export function usePlaylistSongs(id?: string) {
       if (!id || !song._id) {
         return;
       }
-      await addSongToPlayList(song._id, id);
+      addSongToPlayList(song._id, id);
       const tempPlaylist = {...playlist};
       tempPlaylist.songs = [...(tempPlaylist.songs || []), song];
       setPlaylist(tempPlaylist);
     },
-    [id],
+    [id, playlist],
   );
 
   return {...playlist, loading, addSong};

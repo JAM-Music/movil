@@ -40,19 +40,13 @@ const ArtistDetails: React.FC<ArtistDetailsProps> = ({route, navigation}) => {
       <ImageBackground
         source={{uri: artist.image}}
         blurRadius={0.75}
-        style={{height: 250, justifyContent: 'flex-end'}}
+        style={style.background}
         resizeMode="cover">
-        <Text
-          h2
-          style={{
-            paddingVertical: 8,
-            paddingHorizontal: 20,
-            backgroundColor: R.colors.BG_TRANSPARENT,
-          }}>
+        <Text h2 style={style.name}>
           {artist.name}
         </Text>
       </ImageBackground>
-      <View style={{padding: 20}}>
+      <View style={style.buttonWrapper}>
         <ButtonGroup
           selectedIndex={index}
           onPress={setIndex}

@@ -1,6 +1,5 @@
-import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {ImageURISource, Pressable, View, ViewStyle} from 'react-native';
+import {ImageURISource, Pressable, ViewStyle} from 'react-native';
 import {Image, Text} from 'react-native-elements';
 import styles from './Thumbnail.style';
 export type ThumbnailProps = {

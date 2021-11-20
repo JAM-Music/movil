@@ -24,4 +24,5 @@ module.exports = {
   globals: {
     JSX: true,
   },
+  ignorePatterns: ['**/__tests__/*.tsx'],
 };

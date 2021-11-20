@@ -34,7 +34,7 @@ const Template: React.FC<CreatePlaylistModalTemplateProps> = ({
 }) => {
   return (
     <Content style={style.content}>
-      <Text h3 style={{marginBottom: 20}}>
+      <Text h3 style={style.title}>
         Crea tu playlist
       </Text>
       <Input
@@ -53,11 +53,11 @@ const Template: React.FC<CreatePlaylistModalTemplateProps> = ({
           handleFile(file);
         }}
       />
-      <View style={{width: '90%'}}>
+      <View style={style.buttonsWrapper}>
         <Button title="Guardar" loading={loading} onPress={onSubmit} />
         <Button
           title="Cancelar"
-          containerStyle={{marginTop: 20}}
+          containerStyle={style.cancelButton}
           onPress={onClose}
           buttonStyle={{backgroundColor: R.colors.BORDER}}
         />

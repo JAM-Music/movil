@@ -20,22 +20,14 @@ const AlbumDetails: React.FC<AlbumDetailsProps> = ({route}) => {
       <ImageBackground
         source={{uri: album.image}}
         blurRadius={0.75}
-        style={{height: 250, justifyContent: 'flex-end'}}
+        style={style.background}
         resizeMode="cover">
-        <View
-          style={{
-            paddingVertical: 8,
-            paddingHorizontal: 20,
-            backgroundColor: R.colors.BG_TRANSPARENT,
-            position: 'relative',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
+        <View style={style.main}>
           <View>
             <Text h2>{album.title}</Text>
             <Link
               to={{screen: 'artist', params: {artist: album.author}}}
-              style={{color: R.colors.LINKS, fontSize: 15, paddingLeft: 10}}>
+              style={style.link}>
               by {album.author.name}
             </Link>
           </View>
@@ -43,12 +35,12 @@ const AlbumDetails: React.FC<AlbumDetailsProps> = ({route}) => {
             name="play-arrow"
             tvParallaxProperties
             reverse
-            containerStyle={{position: 'absolute', top: 50, right: 20}}
+            containerStyle={style.playIcon}
             color={R.colors.PRIMARY}
           />
         </View>
       </ImageBackground>
-      <View style={{padding: 20}}>
+      <View style={style.songsWrapper}>
         {loading && <ActivityIndicator color={R.colors.PRIMARY} size={50} />}
         <FlatList
           data={songs}

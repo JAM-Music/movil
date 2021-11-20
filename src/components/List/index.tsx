@@ -2,6 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {Text} from 'react-native-elements';
 import Doc from '_src/utils/types/Doc';
+import style from './List.style';
 export type ListProps = {
   data?: Array<Doc>;
   title: string;
@@ -14,7 +15,7 @@ const List: React.FC<ListProps> = ({data, title, coponent}) => {
   }
 
   return (
-    <View style={{marginTop: 20}}>
+    <View style={style.content}>
       <Text h4>{title}</Text>
       {data.map(coponent)}
     </View>
