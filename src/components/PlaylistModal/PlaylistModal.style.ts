@@ -8,6 +8,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   title: {marginBottom: 20},
-  cancelButton: {width: '90%'},
-  buttonsWrapper: {marginTop: 20},
+  cancelButton: {marginTop: 20},
+  buttonsWrapper: {marginTop: 20, width: '90%'},
 });

@@ -12,7 +12,12 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  titleWrapper: {flexDirection: 'row', alignItems: 'center'},
+  titleWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '75%',
+    // flexWrap: 'wrap',
+  },
   editIcon: {color: R.colors.BORDER, marginLeft: 10},
   playIcon: {position: 'absolute', top: '50%', right: 20},
   songsWrapper: {padding: 20},
@@ -25,8 +30,8 @@ export default StyleSheet.create({
   searchMsg: {
     fontSize: 18,
     color: R.colors.TEXT,
-    marginTop: 20,
     textAlign: 'center',
+    marginBottom: 20,
   },
   noFoundMsg: {
     fontSize: 18,
@@ -34,5 +39,5 @@ export default StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
   },
-  searchWrapper: {marginTop: 20},
+  searchWrapper: {marginTop: 40},
 });

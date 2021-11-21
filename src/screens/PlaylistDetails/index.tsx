@@ -1,5 +1,5 @@
-import React from 'react';
-import {ActivityIndicator, FlatList, ImageBackground, View} from 'react-native';
+import React, {useState} from 'react';
+import {ActivityIndicator, ImageBackground, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import R from '_src/assets/R';
 import TrackRow from '_src/components/TrackRow';
@@ -13,15 +13,31 @@ import Doc from '_src/utils/types/Doc';
 import {Song} from '_src/utils/types/Songs';
 import style from './PlaylistDetails.style';
 import Content from '_src/components/Content';
+import PlaylistModal from '_src/components/PlaylistModal';
+import {useSelector} from 'react-redux';
+import {PlaylistSelector} from '_src/store/playlists';
+import {RootState} from '_src/store';
+import {NavigationProp} from '@react-navigation/core';
+import {RootScreens} from '_src/utils/types/Screens';
 
 export type PlaylistDetailsProps = {
   route: {params: {playlist: Playlist}};
+  navigation: NavigationProp<RootScreens>;
 };
 
-const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({route}) => {
-  const {playlist} = route.params;
-  const {songs, loading, addSong} = usePlaylistSongs(playlist._id);
+const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
+  route,
+  navigation,
+}) => {
+  const {
+    playlist: {_id},
+  } = route.params;
+  const playlist = useSelector<RootState, Playlist>(state =>
+    PlaylistSelector(state, _id),
+  );
+  const {loading, addSong} = usePlaylistSongs(_id);
   const {search, results, loading: loadingSearch, noFound} = useSearch();
+  const [modal, setModal] = useState(false);
 
   function onPress(song: Song): void {
     addSong(song);
@@ -40,8 +56,9 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({route}) => {
             <Icon
               name="edit"
               tvParallaxProperties
-              style={style.editIcon}
+              containerStyle={style.editIcon}
               color={R.colors.BORDER}
+              onPress={() => setModal(true)}
             />
           </View>
           <Icon
@@ -55,23 +72,16 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({route}) => {
       </ImageBackground>
       <View style={style.songsWrapper}>
         {loading && <ActivityIndicator color={R.colors.PRIMARY} size={50} />}
-        {!songs?.length && (
+        {!playlist.songs?.length && (
           <Text style={style.emptyMsg}>
             🕸 Aun no tienes canciones agregadas 🕸
           </Text>
         )}
-        <FlatList
-          data={songs}
-          renderItem={({item}) => (
-            <TrackRow
-              artist={item.album.author.name}
-              image={{uri: item.album.image}}
-              title={item.title}
-            />
-          )}
-        />
-        <Text style={style.searchMsg}>Encontremos algo para tu playlist</Text>
+        {playlist.songs?.map(item => (
+          <TrackRow key={item._id} song={item} playlist={playlist._id} />
+        ))}
         <View style={style.searchWrapper}>
+          <Text style={style.searchMsg}>Encontremos algo para tu playlist</Text>
           <SearchBar search={search} />
           {noFound && (
             <Text style={style.noFoundMsg}>
@@ -99,6 +109,15 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({route}) => {
           />
         </View>
       </View>
+      <PlaylistModal
+        onClose={() => setModal(false)}
+        visible={modal}
+        playlist={playlist}
+        onDelete={() => {
+          setModal(false);
+          navigation.goBack();
+        }}
+      />
     </Content>
   );
 };

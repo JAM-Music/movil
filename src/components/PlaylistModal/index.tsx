@@ -1,20 +1,25 @@
 import {useFormik} from 'formik';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ImageURISource, Modal} from 'react-native';
 import {usePlaylist} from '_src/hooks';
 import {Playlist} from '_src/utils/types/Playlist';
 import {PlaylistSchema} from '_src/utils/validators/playlists';
-import Template from './CreatePlaylistModal.template';
-export type CreatePlaylistModalProps = {
+import Template from './PlaylistModal.template';
+
+export type PlaylistModalProps = {
   onClose?: () => any;
+  onDelete?: () => any;
   visible?: boolean;
+  playlist?: Playlist;
 };
 
-const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
+const PlaylistModal: React.FC<PlaylistModalProps> = ({
   visible,
   onClose,
+  onDelete,
+  playlist,
 }) => {
-  const {save} = usePlaylist();
+  const {save, remove} = usePlaylist();
   const file = useRef<ImageURISource>();
   const [loading, setLoading] = useState(false);
   const {
@@ -26,32 +31,33 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
     errors,
     values,
     resetForm,
+    setValues,
   } = useFormik({
     initialValues: {title: '', image: ''} as Playlist,
     validationSchema: PlaylistSchema,
     onSubmit(val) {
-      if (!file.current) {
-        return;
-      }
       setLoading(true);
       save(val, file.current)
         .then(() => {
-          resetForm();
-          if (onClose) {
-            onClose();
-          }
+          if (onClose) onClose();
+          if (!playlist?._id) resetForm();
         })
         .catch(e => setErrors(e.data || {}))
         .finally(() => setLoading(false));
     },
   });
 
-  const close = useCallback(() => {
-    resetForm();
-    if (onClose) {
-      onClose();
+  useEffect(() => {
+    if (playlist) {
+      setValues({...playlist});
     }
-  }, [onClose, resetForm]);
+  }, [playlist, setValues]);
+
+  const close = useCallback(() => {
+    if (onClose) onClose();
+    if (!playlist?._id) resetForm();
+    else setValues({...playlist});
+  }, [onClose, resetForm, playlist, setValues]);
 
   return (
     <Modal
@@ -61,6 +67,10 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
       animationType="slide">
       <Template
         onClose={close}
+        onDelete={() => {
+          if (playlist?._id) remove(playlist?._id);
+          if (onDelete) onDelete();
+        }}
         onSubmit={handleSubmit}
         loading={loading}
         handleBlur={handleBlur}
@@ -68,10 +78,11 @@ const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
         touched={touched}
         errors={errors}
         values={values}
+        edit={!!playlist?._id}
         handleFile={(f: ImageURISource) => (file.current = f)}
       />
     </Modal>
   );
 };
 
-export default CreatePlaylistModal;
+export default PlaylistModal;

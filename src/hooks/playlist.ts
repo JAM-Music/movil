@@ -1,12 +1,19 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {ImageURISource} from 'react-native';
+import {Alert, ImageURISource} from 'react-native';
 import {
   createPlaylist,
   getPlaylists,
   getPlaylist,
   addSongToPlayList,
+  updatePlaylist,
+  removePlaylist,
+  removeSongFromPlayList,
 } from '_src/services/playlist';
-import {PlaylistsActions, PlaylistsSelector} from '_src/store/playlists';
+import {
+  PlaylistsActions,
+  PlaylistSelector,
+  PlaylistsSelector,
+} from '_src/store/playlists';
 import {Playlist} from '_src/utils/types/Playlist';
 import {Song} from '_src/utils/types/Songs';
 import {useAppDispatch, useAppSelector} from '.';
@@ -30,47 +37,70 @@ export function usePlaylist() {
   const dispatch = useAppDispatch();
 
   const save = useCallback(
-    async (playlist: Playlist, file: ImageURISource) => {
+    async (playlist: Playlist, file?: ImageURISource) => {
+      if (playlist._id) {
+        await updatePlaylist(playlist, file);
+        dispatch(PlaylistsActions.update(playlist));
+        return;
+      }
+      if (!file) return;
       const newPlaylist = await createPlaylist(playlist, file);
       dispatch(PlaylistsActions.add(newPlaylist.data));
     },
     [dispatch],
   );
 
+  const remove = useCallback(
+    async (_id: string) => {
+      await removePlaylist(_id);
+      dispatch(PlaylistsActions.delete(_id));
+    },
+    [dispatch],
+  );
   return {
     save,
+    remove,
   };
 }
 
 export function usePlaylistSongs(id?: string) {
   const [loading, setLoading] = useState(true);
-  const [playlist, setPlaylist] = useState<Playlist>({
-    title: '',
-    image: '',
-    songs: [],
-  });
+  const playlist = useAppSelector(state => PlaylistSelector(state, id));
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!id) {
       return;
     }
     getPlaylist(id)
-      .then(p => setPlaylist(p.data))
+      .then(p =>
+        dispatch(
+          PlaylistsActions.setSongs({_id: id, songs: p.data.songs || []}),
+        ),
+      )
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, dispatch]);
 
   const addSong = useCallback(
     async (song: Song) => {
-      if (!id || !song._id) {
-        return;
+      if (!id || !song._id) return;
+      if (playlist.songs?.find(s => s._id === song._id)) {
+        Alert.alert('', 'La canción ya se encuentra en la playlist');
       }
       addSongToPlayList(song._id, id);
-      const tempPlaylist = {...playlist};
-      tempPlaylist.songs = [...(tempPlaylist.songs || []), song];
-      setPlaylist(tempPlaylist);
+      dispatch(PlaylistsActions.addSong({_id: id, song}));
     },
-    [id, playlist],
+    [id, dispatch, playlist.songs],
   );
 
-  return {...playlist, loading, addSong};
+  const removeSong = useCallback(
+    async (song: Song) => {
+      if (!id || !song._id) return;
+      removeSongFromPlayList(song._id, id);
+      dispatch(PlaylistsActions.removeSong({_id: id, song: song._id}));
+    },
+    [id, dispatch],
+  );
+
+  return {loading, addSong, removeSong};
 }

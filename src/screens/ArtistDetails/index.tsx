@@ -56,13 +56,7 @@ const ArtistDetails: React.FC<ArtistDetailsProps> = ({route, navigation}) => {
         <FlatList
           style={showSongStyle}
           data={songs}
-          renderItem={({item}) => (
-            <TrackRow
-              artist={artist.name}
-              image={{uri: item.album.image}}
-              title={item.title}
-            />
-          )}
+          renderItem={({item}) => <TrackRow song={item} />}
         />
         <FlatList
           style={showAlbumStyle}

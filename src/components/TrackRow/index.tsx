@@ -1,31 +1,41 @@
-import React from 'react';
-import {ImageURISource, View} from 'react-native';
+import React, {useState} from 'react';
+import {Pressable, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import {Image} from 'react-native-elements/dist/image/Image';
 import R from '_src/assets/R';
+import {Song} from '_src/utils/types/Songs';
+import SongModal from '../SongModal';
 import style from './TrackRow.style';
 
 export type TrackRowProps = {
-  image: ImageURISource;
-  title: string;
-  artist: string;
+  song: Song;
+  playlist?: string;
 };
 
-const TrackRow: React.FC<TrackRowProps> = ({image, title, artist}) => {
+const TrackRow: React.FC<TrackRowProps> = ({song, playlist}) => {
+  const [modal, setModal] = useState(false);
+
   return (
-    <View style={style.row}>
-      <Image style={style.image} source={image} />
+    <Pressable style={style.row} onPress={() => console.log('@@@ play')}>
+      <Image style={style.image} source={{uri: song.album.image}} />
       <View style={style.textWrapper}>
-        <Text>{title}</Text>
-        <Text style={{color: R.colors.BORDER}}>{artist}</Text>
+        <Text>{song.title}</Text>
+        <Text style={{color: R.colors.BORDER}}>{song.album.author.name}</Text>
       </View>
       <Icon
         type="material"
         name="more-horiz"
         tvParallaxProperties
         color={R.colors.SECONDARY}
+        onPress={() => setModal(true)}
       />
-    </View>
+      <SongModal
+        song={song}
+        visible={modal}
+        onClose={() => setModal(false)}
+        playlist={playlist}
+      />
+    </Pressable>
   );
 };
 

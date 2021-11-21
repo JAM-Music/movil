@@ -19,7 +19,7 @@ const TrackRowPlayList: React.FC<TrackRowProps> = ({
 }) => {
   return (
     <View style={style.content}>
-      <Image style={style.content} source={image} />
+      <Image style={style.image} source={image} />
       <View style={style.textWrappers}>
         <Text>{title}</Text>
         <Text style={{color: R.colors.BORDER}}>{artist}</Text>

@@ -4,7 +4,7 @@ import {ActivityIndicator, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import R from '_src/assets/R';
 import Content from '_src/components/Content';
-import CreatePlaylistModal from '_src/components/CreatePlaylistModal';
+import PlaylistModal from '_src/components/PlaylistModal';
 import NoPlaylist from '_src/components/NoPlaylist';
 import Thumbnail from '_src/components/Thumbnail';
 import {usePlaylists} from '_src/hooks';
@@ -45,10 +45,7 @@ const PlaylistList: React.FC<PlaylistListProps> = ({navigation}) => {
           />
         ))}
       </View>
-      <CreatePlaylistModal
-        visible={modalNew}
-        onClose={() => setModalNew(false)}
-      />
+      <PlaylistModal visible={modalNew} onClose={() => setModalNew(false)} />
     </Content>
   );
 };

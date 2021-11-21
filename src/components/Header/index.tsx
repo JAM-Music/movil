@@ -1,13 +1,13 @@
-import {NavigationProp} from '@react-navigation/core';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ParamListBase} from '@react-navigation/routers';
 import React from 'react';
 import {View} from 'react-native';
 import {Icon} from 'react-native-elements';
 import R from '_src/assets/R';
-import {RootScreens} from '_src/utils/types/Screens';
 import style from './Header.style';
 
 export type HeaderProps = {
-  navigation: NavigationProp<RootScreens>;
+  navigation: NativeStackNavigationProp<ParamListBase, string>;
 };
 
 const Header: React.FC<HeaderProps> = ({navigation}) => {

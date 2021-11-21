@@ -25,4 +25,7 @@ module.exports = {
     JSX: true,
   },
   ignorePatterns: ['**/__tests__/*.tsx'],
+  rules: {
+    curly: ['error', 'multi-line'],
+  },
 };

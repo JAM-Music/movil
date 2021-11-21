@@ -49,14 +49,7 @@ const Search: React.FC<SearchProps> = ({navigation}) => {
         title="Canciones"
         coponent={(song: Doc) => {
           const _song = song as Song;
-          return (
-            <TrackRow
-              key={song._id}
-              image={{uri: _song.album.image}}
-              title={_song.title}
-              artist={_song.album.author.name}
-            />
-          );
+          return <TrackRow key={song._id} song={_song} />;
         }}
         data={results.songs}
       />

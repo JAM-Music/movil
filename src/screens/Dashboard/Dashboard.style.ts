@@ -1,5 +1,6 @@
 /*Dashboard component style file*/
 import {StyleSheet} from 'react-native';
+import R from '_src/assets/R';
 export default StyleSheet.create({
   thumbnail: {
     width: '21%',
@@ -16,4 +17,5 @@ export default StyleSheet.create({
     // justifyContent: 'space-around',
   },
   playlist: {marginTop: 30, marginBottom: 15},
+  noRecents: {color: R.colors.BORDER},
 });

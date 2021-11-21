@@ -7,11 +7,12 @@ import R from '_src/assets/R';
 import {Playlist} from '_src/utils/types/Playlist';
 import Content from '../Content';
 import ImagePicker from '../ImagePicker';
-import style from './CreatePlaylistModal.style';
+import style from './PlaylistModal.style';
 
-export type CreatePlaylistModalTemplateProps = {
+export type PlaylistModalTemplateProps = {
   onClose: () => any;
   onSubmit: () => any;
+  onDelete: () => any;
   handleChange: (name: string) => any;
   handleBlur: (name: string) => any;
   handleFile: (f: ImageURISource) => any;
@@ -19,11 +20,13 @@ export type CreatePlaylistModalTemplateProps = {
   errors: FormikErrors<Playlist>;
   loading?: boolean;
   values: Playlist;
+  edit?: boolean;
 };
 
-const Template: React.FC<CreatePlaylistModalTemplateProps> = ({
+const Template: React.FC<PlaylistModalTemplateProps> = ({
   onClose,
   onSubmit,
+  onDelete,
   handleBlur,
   handleChange,
   handleFile,
@@ -31,15 +34,17 @@ const Template: React.FC<CreatePlaylistModalTemplateProps> = ({
   errors,
   loading,
   values,
+  edit,
 }) => {
   return (
     <Content style={style.content}>
       <Text h3 style={style.title}>
-        Crea tu playlist
+        {edit ? 'Edita' : 'Crea'} tu playlist
       </Text>
       <Input
         autoCompleteType
         placeholder="Título"
+        value={values.title}
         onChangeText={handleChange('title')}
         onBlur={handleBlur('title')}
         errorMessage={touched.title ? errors.title : undefined}
@@ -55,6 +60,15 @@ const Template: React.FC<CreatePlaylistModalTemplateProps> = ({
       />
       <View style={style.buttonsWrapper}>
         <Button title="Guardar" loading={loading} onPress={onSubmit} />
+        {edit && (
+          <Button
+            title="Eliminar"
+            containerStyle={style.cancelButton}
+            onPress={onDelete}
+            icon={<Icon name="delete" color={R.colors.TEXT} size={20} />}
+            buttonStyle={{backgroundColor: R.colors.ERROR}}
+          />
+        )}
         <Button
           title="Cancelar"
           containerStyle={style.cancelButton}

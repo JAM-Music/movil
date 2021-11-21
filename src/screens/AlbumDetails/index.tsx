@@ -44,13 +44,7 @@ const AlbumDetails: React.FC<AlbumDetailsProps> = ({route}) => {
         {loading && <ActivityIndicator color={R.colors.PRIMARY} size={50} />}
         <FlatList
           data={songs}
-          renderItem={({item}) => (
-            <TrackRow
-              artist={item.album.author.name}
-              image={{uri: item.album.image}}
-              title={item.title}
-            />
-          )}
+          renderItem={({item}) => <TrackRow song={item} />}
         />
       </View>
     </View>

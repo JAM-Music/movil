@@ -1,8 +1,10 @@
 import {ImageURISource} from 'react-native';
 import {backendURL} from '_src/config/backend';
+import {formatImageDoc, formatSongImages} from '_src/utils';
 import {Playlist} from '_src/utils/types/Playlist';
 import {
   CustomResponse,
+  del,
   get,
   getSession,
   manageResponse,
@@ -13,23 +15,24 @@ const playlistURL = '/playlists';
 
 export async function getPlaylists() {
   const res = await get<Array<Playlist>>(playlistURL);
-  const data = res.data.map(playlist => ({
-    ...playlist,
-    image: `${backendURL}/${playlist.image}`,
-  }));
+  const data = res.data.map(formatImageDoc);
   return {...res, data};
+}
+
+export function formatPlaylistData(playlist: Playlist, file?: ImageURISource) {
+  const data = new FormData();
+  data.append('title', playlist.title);
+  if (!file) return data;
+  const image = {...file, name: ''};
+  image.name = `image.${playlist.image.split('.').pop()}`;
+  data.append('image', image);
+  return data;
 }
 
 export async function createPlaylist(
   playlist: Playlist,
   file: ImageURISource,
 ): Promise<CustomResponse<Playlist>> {
-  const data = new FormData();
-  const image = {...file, name: ''};
-  image.name = `image.${playlist.image.split('.').pop()}`;
-  data.append('title', playlist.title);
-  data.append('image', image);
-
   const token = await getSession();
   const res = await fetch(`${backendURL}${playlistURL}`, {
     method: 'POST',
@@ -37,28 +40,43 @@ export async function createPlaylist(
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
     },
-    body: data,
+    body: formatPlaylistData(playlist, file),
   }).then(r => manageResponse<Playlist>(r));
-  res.data.image = `${backendURL}/${res.data.image}`;
+  return {...res, data: formatImageDoc(res.data)};
+}
+
+export async function updatePlaylist(
+  playlist: Playlist,
+  file?: ImageURISource,
+): Promise<CustomResponse<String>> {
+  const token = await getSession();
+  const res = await fetch(`${backendURL}${playlistURL}/${playlist._id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
+    },
+    body: formatPlaylistData(playlist, file),
+  }).then(r => manageResponse<String>(r));
   return res;
 }
 
 export async function getPlaylist(id: string) {
   const res = await get<Playlist>(`${playlistURL}/${id}`);
-  const songs = res.data.songs?.map(song => ({
-    ...song,
-    album: {
-      ...song.album,
-      image: `${backendURL}/${song.album.image}`,
-      author: {
-        ...song.album.author,
-        iamge: `${backendURL}/${song.album.author.image}`,
-      },
-    },
-  }));
-  return {...res, data: {...res.data, songs}};
+  return {
+    ...res,
+    data: {...res.data, songs: res.data.songs?.map(formatSongImages)},
+  };
 }
 
 export async function addSongToPlayList(song: string, playList: string) {
   await post<Playlist>(`${playlistURL}/${playList}/song/${song}`);
+}
+
+export async function removeSongFromPlayList(song: string, playList: string) {
+  return del<String>(`${playlistURL}/${playList}/song/${song}`);
+}
+
+export async function removePlaylist(playlist: string) {
+  return del<String>(`${playlistURL}/${playlist}`);
 }
