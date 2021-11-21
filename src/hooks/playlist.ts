@@ -86,6 +86,7 @@ export function usePlaylistSongs(id?: string) {
       if (!id || !song._id) return;
       if (playlist.songs?.find(s => s._id === song._id)) {
         Alert.alert('', 'La canción ya se encuentra en la playlist');
+        return;
       }
       addSongToPlayList(song._id, id);
       dispatch(PlaylistsActions.addSong({_id: id, song}));

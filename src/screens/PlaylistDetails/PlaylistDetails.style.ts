@@ -2,7 +2,6 @@
 import {StyleSheet} from 'react-native';
 import R from '_src/assets/R';
 export default StyleSheet.create({
-  content: {padding: 0},
   background: {height: 250, justifyContent: 'flex-end'},
   main: {
     paddingVertical: 8,

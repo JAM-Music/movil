@@ -21,6 +21,7 @@ const DashboardNavigation: FC<{}> = () => {
           borderTopWidth: 0,
           alignSelf: 'center',
           marginBottom: 20,
+          height: 50,
           backgroundColor: 'rgba(64, 64, 64,0.3)',
         },
         tabBarLabelStyle: {fontSize: 13},

@@ -44,7 +44,7 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
   }
 
   return (
-    <Content style={style.content}>
+    <Content fluid>
       <ImageBackground
         source={{uri: playlist.image}}
         blurRadius={0.75}

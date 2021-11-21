@@ -1,8 +1,9 @@
 import {Link} from '@react-navigation/native';
 import React from 'react';
-import {ActivityIndicator, FlatList, ImageBackground, View} from 'react-native';
+import {ActivityIndicator, ImageBackground, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import R from '_src/assets/R';
+import Content from '_src/components/Content';
 import TrackRow from '_src/components/TrackRow';
 import {useAlbum} from '_src/hooks';
 import {Album} from '_src/utils/types/Songs';
@@ -16,7 +17,7 @@ const AlbumDetails: React.FC<AlbumDetailsProps> = ({route}) => {
   const {album} = route.params;
   const {loading, songs} = useAlbum(album._id);
   return (
-    <View>
+    <Content fluid>
       <ImageBackground
         source={{uri: album.image}}
         blurRadius={0.75}
@@ -42,12 +43,11 @@ const AlbumDetails: React.FC<AlbumDetailsProps> = ({route}) => {
       </ImageBackground>
       <View style={style.songsWrapper}>
         {loading && <ActivityIndicator color={R.colors.PRIMARY} size={50} />}
-        <FlatList
-          data={songs}
-          renderItem={({item}) => <TrackRow song={item} />}
-        />
+        {songs.map(item => (
+          <TrackRow song={item} key={item._id} />
+        ))}
       </View>
-    </View>
+    </Content>
   );
 };
 

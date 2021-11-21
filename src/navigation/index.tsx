@@ -11,6 +11,7 @@ import Header from '_src/components/Header';
 import {RootScreens} from '_src/utils/types/Screens';
 import AlbumDetails from '_src/screens/AlbumDetails';
 import PlaylistDetails from '_src/screens/PlaylistDetails';
+import PlayerOverlay from '_src/components/PlayerOverlay';
 
 export type RootNavigationProps = {};
 const Stack = createNativeStackNavigator<RootScreens>();
@@ -24,38 +25,40 @@ const RootNavigation: React.FC<RootNavigationProps> = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          contentStyle: {backgroundColor: R.colors.BG},
-          header: ({navigation}) => <Header navigation={navigation} />,
-          headerShown: false,
-        }}>
-        {isLoggedIn ? (
-          <>
-            <Stack.Screen component={DashboardNavigation} name="dashboard" />
-            <Stack.Screen
-              component={ArtistDetails}
-              name="artist"
-              options={{headerShown: true}}
-            />
-            <Stack.Screen
-              component={AlbumDetails}
-              name="album"
-              options={{headerShown: true}}
-            />
-            <Stack.Screen
-              component={PlaylistDetails}
-              name="playlistDetail"
-              options={{headerShown: true}}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen component={Login} name="login" />
-            <Stack.Screen component={Register} name="register" />
-          </>
-        )}
-      </Stack.Navigator>
+      <PlayerOverlay>
+        <Stack.Navigator
+          screenOptions={{
+            contentStyle: {backgroundColor: R.colors.BG},
+            header: ({navigation}) => <Header navigation={navigation} />,
+            headerShown: false,
+          }}>
+          {isLoggedIn ? (
+            <>
+              <Stack.Screen component={DashboardNavigation} name="dashboard" />
+              <Stack.Screen
+                component={ArtistDetails}
+                name="artist"
+                options={{headerShown: true}}
+              />
+              <Stack.Screen
+                component={AlbumDetails}
+                name="album"
+                options={{headerShown: true}}
+              />
+              <Stack.Screen
+                component={PlaylistDetails}
+                name="playlistDetail"
+                options={{headerShown: true}}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen component={Login} name="login" />
+              <Stack.Screen component={Register} name="register" />
+            </>
+          )}
+        </Stack.Navigator>
+      </PlayerOverlay>
     </NavigationContainer>
   );
 };

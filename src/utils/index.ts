@@ -30,3 +30,11 @@ export function formatSongImages(song: Song): Song {
     album: formatAlbumImages(song.album),
   };
 }
+
+export function secondsToTime(time: number) {
+  return (
+    `${Math.floor(time / 60)}`.padStart(2, '0') +
+    ':' +
+    `${Math.floor(Math.abs(time % 60))}`.padStart(2, '0')
+  );
+}
