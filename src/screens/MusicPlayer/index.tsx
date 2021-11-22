@@ -17,13 +17,9 @@ import {useSongs} from '_src/hooks/useSong';
 import style from './MusicPlayer.style';
 import R from '_src/assets/R';
 
-export type MusicPlayerProps = {
-  route: {params: {song: Song}};
-};
+export type MusicPlayerProps = {};
 
-const MusicPlayer: React.FC<MusicPlayerProps> = ({route}) => {
-  const {params} = route;
-
+const MusicPlayer: React.FC<MusicPlayerProps> = ({}) => {
   const playback = usePlaybackState();
   const progress = useProgress();
   const [trackObj, setTrackObj] = useState<Track>();

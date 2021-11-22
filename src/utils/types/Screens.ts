@@ -14,7 +14,7 @@ export interface RootScreens extends ParamListBase {
   login: LoginProps;
   album: {album: Album};
   playlist: {playlist: Playlist};
-  musicPlayer: {song: Song};
+  musicPlayer: {};
   register: RegisterProps;
 }
 

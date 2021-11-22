@@ -7,15 +7,24 @@ import style from './PlayerOverlay.style';
 import {RootScreens} from '_src/utils/types/Screens';
 import {NavigationProp} from '@react-navigation/core';
 import {Song} from '_src/utils/types/Songs';
+import TrackPlayer, {Track} from 'react-native-track-player';
 
 export type PlayerOverlayTemplateProps = {
   show: boolean;
   isBottomTabOpen: boolean;
+  trackObj: Track;
+  paused: boolean;
+  togglePlayPause: () => any;
+  onPress: () => any;
 };
 
 const Template: React.FC<PlayerOverlayTemplateProps> = ({
   show,
   isBottomTabOpen,
+  trackObj,
+  onPress,
+  togglePlayPause,
+  paused,
 }) => {
   const containerStyle = useMemo(
     () =>
@@ -28,21 +37,21 @@ const Template: React.FC<PlayerOverlayTemplateProps> = ({
 
   return (
     <View style={[style.container, containerStyle]}>
-      <Pressable onPress={() => {}} style={style.main}>
+      <Pressable onPress={() => onPress()} style={style.main}>
         <Image
-          source={{uri: `${backendURL}/images/albums/planet her.jpg`}}
+          source={{uri: (trackObj?.artwork as string) || ''}}
           style={style.image}
         />
         <View>
-          <Text>PlayerOverlay</Text>
-          <Text style={style.author}>Autor</Text>
+          <Text>{trackObj?.title || ''}</Text>
+          <Text style={style.author}>{trackObj?.album || ''}</Text>
         </View>
         <View style={style.playWrapper}>
           <Icon
-            name="play-arrow"
+            name={paused ? 'play-arrow' : 'pause'}
             tvParallaxProperties
             color={R.colors.TEXT}
-            onPress={() => console.log('@@@ play/pause song')}
+            onPress={togglePlayPause}
           />
         </View>
       </Pressable>
