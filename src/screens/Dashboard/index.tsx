@@ -5,7 +5,6 @@ import {Icon, Text} from 'react-native-elements';
 import R from '_src/assets/R';
 import Content from '_src/components/Content';
 import NoPlaylist from '_src/components/NoPlaylist';
-import SeekBar from '_src/components/SeekBar';
 import Thumbnail from '_src/components/Thumbnail';
 import TrackRow from '_src/components/TrackRow';
 import {usePlaylists, useRecents, useUser} from '_src/hooks';

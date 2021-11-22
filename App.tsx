@@ -15,15 +15,28 @@ import RootNavigation from '_navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Theme} from '_src/config/theme';
 import {ThemeProvider} from 'react-native-elements';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, {Capability} from 'react-native-track-player';
 
 const App = () => {
   useEffect(() => {
     async function setupPlayer() {
       await TrackPlayer.setupPlayer({});
-      TrackPlayer.updateOptions({stopWithApp: true});
+      TrackPlayer.updateOptions({
+        stopWithApp: true,
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.Stop,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+        ],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+      });
     }
     setupPlayer();
+    return () => {
+      TrackPlayer.destroy();
+    };
   }, []);
 
   return (
