@@ -11,6 +11,7 @@ import Header from '_src/components/Header';
 import {RootScreens} from '_src/utils/types/Screens';
 import AlbumDetails from '_src/screens/AlbumDetails';
 import PlaylistDetails from '_src/screens/PlaylistDetails';
+import MusicPlayer from '_src/screens/MusicPlayer';
 import PlayerOverlay from '_src/components/PlayerOverlay';
 
 export type RootNavigationProps = {};
@@ -48,6 +49,11 @@ const RootNavigation: React.FC<RootNavigationProps> = () => {
               <Stack.Screen
                 component={PlaylistDetails}
                 name="playlistDetail"
+                options={{headerShown: true}}
+              />
+              <Stack.Screen
+                component={MusicPlayer}
+                name="musicPlayer"
                 options={{headerShown: true}}
               />
             </>

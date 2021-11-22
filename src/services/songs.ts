@@ -33,3 +33,8 @@ export async function getRecents() {
   const res = await get<Array<Song>>('/songs/recents');
   return {...res, data: res.data.map(formatSongImages)};
 }
+
+export async function getPlaySong(id: string) {
+  const res = await get<any>(`/songs/play/${id}`);
+  return {...res, data: res.data};
+}

@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {RootScreens} from '_src/utils/types/Screens';
 import {Pressable, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import {Image} from 'react-native-elements/dist/image/Image';
@@ -14,9 +16,14 @@ export type TrackRowProps = {
 
 const TrackRow: React.FC<TrackRowProps> = ({song, playlist}) => {
   const [modal, setModal] = useState(false);
+  const navigation = useNavigation<NavigationProp<RootScreens>>();
 
   return (
-    <Pressable style={style.row} onPress={() => console.log('@@@ play')}>
+    <Pressable
+      style={style.row}
+      onPress={() => {
+        navigation.navigate('musicPlayer', {song});
+      }}>
       <Image style={style.image} source={{uri: song.album.image}} />
       <View style={style.textWrapper}>
         <Text>{song.title}</Text>

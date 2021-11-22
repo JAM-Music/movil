@@ -6,7 +6,7 @@ import {useNavigationState} from '@react-navigation/core';
 export type PlayerOverlayProps = {};
 
 const PlayerOverlay: React.FC<PlayerOverlayProps> = ({children}) => {
-  const [showOverlay, setShowOverlay] = useState(true);
+  const [showOverlay, setShowOverlay] = useState(false);
   const state = useNavigationState(s => s);
   const isBottomTabOpen = useMemo(
     () => state?.routes[state?.index].name === 'dashboard',

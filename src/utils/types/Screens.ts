@@ -6,7 +6,7 @@ import {ProfileProps} from '_src/screens/Profile';
 import {RegisterProps} from '_src/screens/Register';
 import {SearchProps} from '_src/screens/Search';
 import {Playlist} from './Playlist';
-import {Album, Artist} from './Songs';
+import {Album, Artist, Song} from './Songs';
 
 export interface RootScreens extends ParamListBase {
   artist: {artist: Artist};
@@ -14,6 +14,7 @@ export interface RootScreens extends ParamListBase {
   login: LoginProps;
   album: {album: Album};
   playlist: {playlist: Playlist};
+  musicPlayer: {song: Song};
   register: RegisterProps;
 }
 

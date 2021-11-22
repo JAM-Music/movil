@@ -4,6 +4,9 @@ import {Icon, Image, Text} from 'react-native-elements';
 import R from '_src/assets/R';
 import {backendURL} from '_src/config/backend';
 import style from './PlayerOverlay.style';
+import {RootScreens} from '_src/utils/types/Screens';
+import {NavigationProp} from '@react-navigation/core';
+import {Song} from '_src/utils/types/Songs';
 
 export type PlayerOverlayTemplateProps = {
   show: boolean;
@@ -25,9 +28,7 @@ const Template: React.FC<PlayerOverlayTemplateProps> = ({
 
   return (
     <View style={[style.container, containerStyle]}>
-      <Pressable
-        onPress={() => console.log('@@@ open full player')}
-        style={style.main}>
+      <Pressable onPress={() => {}} style={style.main}>
         <Image
           source={{uri: `${backendURL}/images/albums/planet her.jpg`}}
           style={style.image}
