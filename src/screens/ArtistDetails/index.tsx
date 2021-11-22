@@ -13,6 +13,7 @@ import Album from '_src/components/Album';
 import Content from '_src/components/Content';
 import TrackRow from '_src/components/TrackRow';
 import {useArtist} from '_src/hooks';
+import {useSongs} from '_src/hooks/useSong';
 import {RootScreens} from '_src/utils/types/Screens';
 import {Artist} from '_src/utils/types/Songs';
 import style from './ArtistDetails.style';
@@ -35,6 +36,8 @@ const ArtistDetails: React.FC<ArtistDetailsProps> = ({route, navigation}) => {
     [index],
   );
 
+  const {assingSongs} = useSongs();
+
   return (
     <Content fluid>
       <ImageBackground
@@ -54,8 +57,17 @@ const ArtistDetails: React.FC<ArtistDetailsProps> = ({route, navigation}) => {
         />
         {loading && <ActivityIndicator color={R.colors.PRIMARY} size={50} />}
         <View style={showSongStyle}>
-          {songs.map(song => (
-            <TrackRow song={song} key={song._id} />
+          {songs.map((song, index) => (
+            <TrackRow
+              song={song}
+              key={song._id}
+              onPress={() => {
+                assingSongs(songs?.slice(index) || []);
+                navigation.navigate('musicPlayer', {
+                  song,
+                });
+              }}
+            />
           ))}
         </View>
         <View style={showAlbumStyle}>

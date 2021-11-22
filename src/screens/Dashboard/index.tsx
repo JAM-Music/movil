@@ -9,6 +9,7 @@ import SeekBar from '_src/components/SeekBar';
 import Thumbnail from '_src/components/Thumbnail';
 import TrackRow from '_src/components/TrackRow';
 import {usePlaylists, useRecents, useUser} from '_src/hooks';
+import {useSongs} from '_src/hooks/useSong';
 import {RootScreens} from '_src/utils/types/Screens';
 import style from './Dashboard.style';
 
@@ -20,6 +21,7 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
   const {fullName} = useUser();
   const {playlists} = usePlaylists();
   const {recents, noRecents} = useRecents();
+  const {assingSongs} = useSongs();
 
   return (
     <Content>
@@ -45,8 +47,6 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
         />
       </View>
 
-      <SeekBar duration={194} currentTime={0} />
-
       <Text h3 style={style.recientes}>
         Recientes
       </Text>
@@ -55,8 +55,17 @@ const Dashboard: React.FC<DashboardProps> = ({navigation}) => {
           Las últimas canciones que escuches apareceran aquí 🎉
         </Text>
       )}
-      {recents.map(song => (
-        <TrackRow key={song._id} song={song} />
+      {recents.map((song, index) => (
+        <TrackRow
+          key={song._id}
+          song={song}
+          onPress={() => {
+            assingSongs(recents?.slice(index) || []);
+            navigation.navigate('musicPlayer', {
+              song,
+            });
+          }}
+        />
       ))}
       <Text h3 style={style.playlist}>
         Playlists

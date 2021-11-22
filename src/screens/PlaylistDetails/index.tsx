@@ -19,6 +19,7 @@ import {PlaylistSelector} from '_src/store/playlists';
 import {RootState} from '_src/store';
 import {NavigationProp} from '@react-navigation/core';
 import {RootScreens} from '_src/utils/types/Screens';
+import {useSongs} from '_src/hooks/useSong';
 
 export type PlaylistDetailsProps = {
   route: {params: {playlist: Playlist}};
@@ -38,6 +39,7 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
   const {loading, addSong} = usePlaylistSongs(_id);
   const {search, results, loading: loadingSearch, noFound} = useSearch();
   const [modal, setModal] = useState(false);
+  const {assingSongs} = useSongs();
 
   function onPress(song: Song): void {
     addSong(song);
@@ -77,8 +79,18 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
             🕸 Aun no tienes canciones agregadas 🕸
           </Text>
         )}
-        {playlist.songs?.map(item => (
-          <TrackRow key={item._id} song={item} playlist={playlist._id} />
+        {playlist.songs?.map((item, index) => (
+          <TrackRow
+            key={item._id}
+            song={item}
+            playlist={playlist._id}
+            onPress={() => {
+              assingSongs(playlist.songs?.slice(index) || []);
+              navigation.navigate('musicPlayer', {
+                song: item,
+              });
+            }}
+          />
         ))}
         <View style={style.searchWrapper}>
           <Text style={style.searchMsg}>Encontremos algo para tu playlist</Text>

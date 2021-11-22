@@ -12,9 +12,10 @@ import style from './TrackRow.style';
 export type TrackRowProps = {
   song: Song;
   playlist?: string;
+  onPress?: () => any;
 };
 
-const TrackRow: React.FC<TrackRowProps> = ({song, playlist}) => {
+const TrackRow: React.FC<TrackRowProps> = ({song, playlist, onPress}) => {
   const [modal, setModal] = useState(false);
   const navigation = useNavigation<NavigationProp<RootScreens>>();
 
@@ -22,7 +23,7 @@ const TrackRow: React.FC<TrackRowProps> = ({song, playlist}) => {
     <Pressable
       style={style.row}
       onPress={() => {
-        navigation.navigate('musicPlayer', {song});
+        if (onPress) onPress();
       }}>
       <Image style={style.image} source={{uri: song.album.image}} />
       <View style={style.textWrapper}>

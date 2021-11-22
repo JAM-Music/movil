@@ -10,6 +10,7 @@ import List from '_src/components/List';
 import SearchBar from '_src/components/SearchBar';
 import TrackRow from '_src/components/TrackRow';
 import {useSearch} from '_src/hooks';
+import {useSongs} from '_src/hooks/useSong';
 import Doc from '_src/utils/types/Doc';
 import {DashboardScreens} from '_src/utils/types/Screens';
 import {
@@ -25,6 +26,7 @@ export type SearchProps = {
 
 const Search: React.FC<SearchProps> = ({navigation}) => {
   const {search, results, loading, noFound, noSearch} = useSearch();
+  const {assingSongs} = useSongs();
 
   return (
     <Content>
@@ -49,7 +51,18 @@ const Search: React.FC<SearchProps> = ({navigation}) => {
         title="Canciones"
         coponent={(song: Doc) => {
           const _song = song as Song;
-          return <TrackRow key={song._id} song={_song} />;
+          return (
+            <TrackRow
+              key={song._id}
+              song={_song}
+              onPress={() => {
+                assingSongs([_song]);
+                navigation.navigate('musicPlayer', {
+                  song: _song,
+                });
+              }}
+            />
+          );
         }}
         data={results.songs}
       />

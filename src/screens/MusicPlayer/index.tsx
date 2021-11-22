@@ -1,5 +1,5 @@
 import {NavigationProp} from '@react-navigation/core';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {View} from 'react-native';
 import {ButtonGroup, Text, Image, Icon} from 'react-native-elements';
 import Content from '_src/components/Content';
@@ -7,16 +7,15 @@ import {Song} from '_src/utils/types/Songs';
 import SeekBar from '_src/components/SeekBar';
 import TrackPlayer, {
   State,
+  Track,
   usePlaybackState,
   useProgress,
+  useTrackPlayerEvents,
+  Event,
 } from 'react-native-track-player';
 import {useSongs} from '_src/hooks/useSong';
-import {backendURL} from '_src/config/backend';
-import {getSession} from '_services/RESTMethods';
 import style from './MusicPlayer.style';
 import R from '_src/assets/R';
-
-backendURL;
 
 export type MusicPlayerProps = {
   route: {params: {song: Song}};
@@ -24,38 +23,35 @@ export type MusicPlayerProps = {
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({route}) => {
   const {params} = route;
-  const {song} = params;
 
   const playback = usePlaybackState();
   const progress = useProgress();
-  const [player, setPlayer] = useState({});
+  const [trackObj, setTrackObj] = useState<Track>();
+
+  async function getTrack() {
+    const trackIndex = await TrackPlayer.getCurrentTrack();
+    const trackObject = await TrackPlayer.getTrack(trackIndex);
+    setTrackObj(trackObject);
+  }
+
+  useTrackPlayerEvents([Event.PlaybackTrackChanged], () => {
+    getTrack();
+  });
   const [music, setMusic] = useState([]);
-  const {getSong} = useSongs();
+  const {assingSongs} = useSongs();
   const [iconButton, setIconButton] = useState('pause');
 
   useEffect(() => {
-    async function getCredentials() {
-      const sessionId = await getSession();
-      const Authorization = `Bearer ${sessionId}`;
-      TrackPlayer.add([
-        {
-          url: `${backendURL}/songs/play/${song._id}`, // Load media from the network
-          title: song.title,
-          artist: song.album.author.name,
-          album: song.album.title,
-          genre: song.genre.name,
-          duration: song.duration, // Duration in seconds
-          headers: {
-            Authorization,
-          },
-        },
-      ]).then(async () => {
-        await TrackPlayer.play();
-        console.log('postSong');
-      });
-    }
-    getCredentials();
-  }, [song]);
+    getTrack();
+  }, []);
+
+  async function back() {
+    TrackPlayer.skipToPrevious();
+  }
+
+  async function forward() {
+    TrackPlayer.skipToNext();
+  }
 
   async function controlMusic() {
     if (playback == State.Playing) {
@@ -67,26 +63,36 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({route}) => {
     }
   }
 
+  if (!trackObj) return null;
   return (
     <Content>
       <View style={{flex: 1, alignItems: 'center'}}>
         <Image
-          source={{uri: song.album.image}}
+          source={{uri: (trackObj?.artwork as string) || ''}}
           style={{width: '80%', aspectRatio: 1, borderRadius: 10}}
           blurRadius={0.9}
         />
-        <Text style={{marginTop: 20, fontSize: 20}}>{song.title}</Text>
+        <Text style={{marginTop: 20, fontSize: 20}}>{trackObj?.title}</Text>
         <Text style={{marginTop: 10, fontSize: 15}}>
-          {song.album.title + ' - ' + song.album.author.name}
+          {trackObj?.album + ' - ' + trackObj?.artist}
         </Text>
         <View style={{marginTop: 20}}>
           <SeekBar
-            duration={song.duration}
-            currentTime={progress.position}
+            duration={trackObj?.duration || 10}
+            currentTime={progress.position || 1}
             onSeek={position => TrackPlayer.seekTo(position)}
           />
         </View>
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center', flex: 1, flexDirection: 'row'}}>
+          <Icon
+            name={'skip-previous'}
+            type="material"
+            tvParallaxProperties
+            reverse
+            containerStyle={style.playIcon}
+            color={R.colors.PRIMARY}
+            onPress={() => back()}
+          />
           <Icon
             name={iconButton}
             tvParallaxProperties
@@ -94,6 +100,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({route}) => {
             containerStyle={style.playIcon}
             color={R.colors.PRIMARY}
             onPress={() => controlMusic()}
+          />
+          <Icon
+            name={'skip-next'}
+            tvParallaxProperties
+            reverse
+            containerStyle={style.playIcon}
+            color={R.colors.PRIMARY}
+            onPress={() => forward()}
           />
         </View>
       </View>
