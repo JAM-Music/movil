@@ -39,11 +39,14 @@ const PlaylistModal: React.FC<PlaylistModalProps> = ({
       setLoading(true);
       save(val, file.current)
         .then(() => {
-          if (onClose) onClose();
           if (!playlist?._id) resetForm();
+          setLoading(false);
+          if (onClose) onClose();
         })
-        .catch(e => setErrors(e.data || {}))
-        .finally(() => setLoading(false));
+        .catch(e => {
+          setLoading(false);
+          setErrors(e.data || {});
+        });
     },
   });
 

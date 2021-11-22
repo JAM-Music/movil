@@ -21,4 +21,5 @@ export default StyleSheet.create({
   album: {marginTop: 10, fontSize: 15},
   image: {width: '80%', aspectRatio: 1, borderRadius: 10},
   main: {flex: 1, alignItems: 'center'},
+  queueWrapper: {alignItems: 'flex-end', width: '100%', marginTop: 20},
 });

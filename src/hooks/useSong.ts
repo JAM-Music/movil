@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback} from 'react';
 
 import {getPlaySong} from '_src/services/songs';
 import {Song} from '_src/utils/types/Songs';
@@ -8,8 +8,6 @@ import TrackPlayer, {Track} from 'react-native-track-player';
 import {backendURL} from '_src/config/backend';
 
 export function useSongs() {
-  const [loading, setLoading] = useState(true);
-
   const getSong = useCallback(async (id: string) => {
     if (!id) return;
     const musicTemp = await getPlaySong(id);
@@ -39,5 +37,24 @@ export function useSongs() {
     TrackPlayer.play();
   }, []);
 
-  return {loading, getSong, assingSongs};
+  const addSong = useCallback(async (song: Song) => {
+    const sessionId = await getSession();
+    const Authorization = `Bearer ${sessionId}`;
+    const track = {
+      url: `${backendURL}/songs/play/${song._id}`, // Load media from the network
+      title: song.title,
+      artist: song.album.author.name,
+      album: song.album.title,
+      genre: song.genre.name,
+      duration: song.duration, // Duration in seconds
+      artwork: song.album.image,
+      headers: {
+        Authorization,
+      },
+    } as Track;
+    await TrackPlayer.add([track]);
+    TrackPlayer.play();
+  }, []);
+
+  return {getSong, assingSongs, addSong};
 }

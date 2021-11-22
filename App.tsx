@@ -20,7 +20,7 @@ import TrackPlayer, {Capability} from 'react-native-track-player';
 const App = () => {
   useEffect(() => {
     async function setupPlayer() {
-      await TrackPlayer.setupPlayer({});
+      await TrackPlayer.setupPlayer();
       TrackPlayer.updateOptions({
         stopWithApp: true,
         capabilities: [

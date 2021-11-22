@@ -13,6 +13,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import style from './MusicPlayer.style';
 import R from '_src/assets/R';
+import QueueModal from '_src/components/QueueModal';
 
 export type MusicPlayerProps = {};
 
@@ -20,6 +21,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({}) => {
   const playback = usePlaybackState();
   const progress = useProgress();
   const [trackObj, setTrackObj] = useState<Track>();
+  const [queue, setQueue] = useState(false);
 
   async function getTrack() {
     const trackIndex = await TrackPlayer.getCurrentTrack();
@@ -97,6 +99,17 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({}) => {
             containerStyle={style.playIcon}
             color={R.colors.PRIMARY}
             onPress={() => forward()}
+          />
+        </View>
+        <View style={style.queueWrapper}>
+          <QueueModal visible={queue} onClose={() => setQueue(false)} />
+          <Icon
+            name={'queue-music'}
+            size={35}
+            tvParallaxProperties
+            containerStyle={style.playIcon}
+            color={R.colors.TEXT}
+            onPress={() => setQueue(true)}
           />
         </View>
       </View>

@@ -2,6 +2,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {Modal} from 'react-native';
 import {usePlaylistSongs} from '_src/hooks';
+import {useSongs} from '_src/hooks/useSong';
 import {RootScreens} from '_src/utils/types/Screens';
 import {Song} from '_src/utils/types/Songs';
 import Template from './SongModal.template';
@@ -20,12 +21,20 @@ const SongModal: React.FC<SongModalProps> = ({
 }) => {
   const navigation = useNavigation<NavigationProp<RootScreens>>();
   const {removeSong} = usePlaylistSongs(playlist);
+  const {addSong} = useSongs();
 
   return (
-    <Modal transparent visible={visible} onRequestClose={onClose}>
+    <Modal
+      transparent
+      animationType="slide"
+      visible={visible}
+      onRequestClose={onClose}>
       <Template
         song={song}
-        addToQueue={() => console.log('@@@ Add to playlist')}
+        addToQueue={() => {
+          addSong(song);
+          onClose();
+        }}
         removeFromPlaylist={() => {
           onClose();
           removeSong(song);

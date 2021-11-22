@@ -1,4 +1,5 @@
 import {ImageURISource} from 'react-native';
+import {Asset} from 'react-native-image-picker';
 import {backendURL} from '_src/config/backend';
 import {formatImageDoc, formatSongImages} from '_src/utils';
 import {Playlist} from '_src/utils/types/Playlist';
@@ -19,12 +20,15 @@ export async function getPlaylists() {
   return {...res, data};
 }
 
-export function formatPlaylistData(playlist: Playlist, file?: ImageURISource) {
+export function formatPlaylistData(playlist: Playlist, file?: Asset) {
   const data = new FormData();
   data.append('title', playlist.title);
   if (!file) return data;
-  const image = {...file, name: ''};
-  image.name = `image.${playlist.image.split('.').pop()}`;
+  const image = {
+    uri: file.uri,
+    name: playlist.image,
+    type: file.type,
+  };
   data.append('image', image);
   return data;
 }
@@ -33,6 +37,7 @@ export async function createPlaylist(
   playlist: Playlist,
   file: ImageURISource,
 ): Promise<CustomResponse<Playlist>> {
+  const body = formatPlaylistData(playlist, file);
   const token = await getSession();
   const res = await fetch(`${backendURL}${playlistURL}`, {
     method: 'POST',
@@ -40,7 +45,7 @@ export async function createPlaylist(
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${token}`,
     },
-    body: formatPlaylistData(playlist, file),
+    body,
   }).then(r => manageResponse<Playlist>(r));
   return {...res, data: formatImageDoc(res.data)};
 }

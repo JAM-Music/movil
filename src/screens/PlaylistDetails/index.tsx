@@ -41,10 +41,6 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
   const [modal, setModal] = useState(false);
   const {assingSongs} = useSongs();
 
-  function onPress(song: Song): void {
-    addSong(song);
-  }
-
   return (
     <Content fluid>
       <ImageBackground
@@ -69,6 +65,10 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
             reverse
             containerStyle={style.playIcon}
             color={R.colors.PRIMARY}
+            onPress={() => {
+              navigation.navigate('musicPlayer');
+              assingSongs(playlist.songs || []);
+            }}
           />
         </View>
       </ImageBackground>
@@ -86,9 +86,7 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
             playlist={playlist._id}
             onPress={() => {
               assingSongs(playlist.songs?.slice(index) || []);
-              navigation.navigate('musicPlayer', {
-                song: item,
-              });
+              navigation.navigate('musicPlayer');
             }}
           />
         ))}
@@ -113,7 +111,7 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
                   image={{uri: _song.album.image}}
                   title={_song.title}
                   artist={_song.album.author.name}
-                  onPress={() => onPress(_song)}
+                  onPress={() => addSong(_song)}
                 />
               );
             }}

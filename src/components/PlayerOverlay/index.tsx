@@ -15,6 +15,8 @@ import TrackPlayer, {
   Event,
   usePlaybackState,
 } from 'react-native-track-player';
+import PushNotification from 'react-native-push-notification';
+import R from '_src/assets/R';
 export type PlayerOverlayProps = {};
 
 const PlayerOverlay: React.FC<PlayerOverlayProps> = ({children}) => {
@@ -47,18 +49,32 @@ const PlayerOverlay: React.FC<PlayerOverlayProps> = ({children}) => {
     };
   }, []);
 
-  async function getTrack() {
-    const trackIndex = await TrackPlayer.getCurrentTrack();
-    const trackObject = await TrackPlayer.getTrack(trackIndex);
-    setTrackObj(trackObject);
-  }
+  useTrackPlayerEvents([Event.PlaybackTrackChanged], event => {
+    if (
+      event.type === 'playback-track-changed' &&
+      event.nextTrack !== undefined
+    ) {
+      TrackPlayer.getTrack(event.nextTrack).then(setTrackObj);
+    }
+  });
 
-  useTrackPlayerEvents(
-    [Event.PlaybackTrackChanged, Event.PlaybackState],
-    () => {
-      getTrack();
-    },
-  );
+  useEffect(() => {
+    if (trackObj) {
+      PushNotification.localNotification({
+        channelId: 'channel-id',
+        message: `${trackObj.album} - ${trackObj.artist}`,
+        ignoreInForeground: true,
+        title: `Ahora reproduciendo: ${trackObj.title}`,
+        color: R.colors.BG,
+        largeIconUrl: trackObj.artwork as string,
+      });
+    }
+    return () => {
+      if (PushNotification.cancelAllLocalNotifications) {
+        PushNotification.cancelAllLocalNotifications();
+      }
+    };
+  }, [trackObj]);
 
   const togglePlay = useCallback(() => {
     if (playback === State.Paused) {
@@ -79,7 +95,7 @@ const PlayerOverlay: React.FC<PlayerOverlayProps> = ({children}) => {
           isBottomTabOpen={isBottomTabOpen}
           trackObj={trackObj}
           onPress={() => {
-            navigation.navigate('musicPlayer', {});
+            navigation.navigate('musicPlayer');
           }}
         />
       )}
