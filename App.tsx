@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Provider} from 'react-redux';
 import {store} from '_redux';
 import RootNavigation from '_navigation';
@@ -17,25 +17,29 @@ import {Theme} from '_src/config/theme';
 import {ThemeProvider} from 'react-native-elements';
 import TrackPlayer, {Capability} from 'react-native-track-player';
 
+async function setupPlayer() {
+  await TrackPlayer.setupPlayer();
+  await TrackPlayer.updateOptions({
+    stopWithApp: true,
+    capabilities: [
+      Capability.Play,
+      Capability.Pause,
+      Capability.Stop,
+      Capability.SkipToNext,
+      Capability.SkipToPrevious,
+    ],
+    compactCapabilities: [Capability.Play, Capability.Pause],
+  });
+}
+
 const App = () => {
+  const isTrackerInitialized = useRef(false);
   useEffect(() => {
-    async function setupPlayer() {
-      await TrackPlayer.setupPlayer();
-      TrackPlayer.updateOptions({
-        stopWithApp: true,
-        capabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.Stop,
-          Capability.SkipToNext,
-          Capability.SkipToPrevious,
-        ],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-      });
-    }
-    setupPlayer();
+    setupPlayer().then(() => (isTrackerInitialized.current = true));
     return () => {
-      TrackPlayer.destroy();
+      if (isTrackerInitialized.current) {
+        TrackPlayer.destroy();
+      }
     };
   }, []);
 

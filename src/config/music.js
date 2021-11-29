@@ -9,9 +9,9 @@ module.exports = async function () {
 
   TrackPlayer.addEventListener('remote-stop', () => TrackPlayer.destroy());
   TrackPlayer.addEventListener(Event.RemoteNext, () =>
-    TrackPlayer.skipToNext(),
+    TrackPlayer.skipToNext().catch(() => {}),
   );
   TrackPlayer.addEventListener(Event.RemotePrevious, () =>
-    TrackPlayer.destroy(),
+    TrackPlayer.destroy().catch(() => {}),
   );
 };
