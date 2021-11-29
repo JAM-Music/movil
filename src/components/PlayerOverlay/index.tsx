@@ -17,11 +17,13 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import PushNotification from 'react-native-push-notification';
 import R from '_src/assets/R';
+import {useUser} from '_src/hooks';
 export type PlayerOverlayProps = {};
 
 const PlayerOverlay: React.FC<PlayerOverlayProps> = ({children}) => {
   const [showOverlay, setShowOverlay] = useState(true);
   const [trackObj, setTrackObj] = useState<Track>();
+  const {isLoggedIn} = useUser();
   const state = useNavigationState(s => s);
   const playback = usePlaybackState();
   const navigation = useNavigation<NavigationProp<RootScreens>>();
@@ -91,7 +93,7 @@ const PlayerOverlay: React.FC<PlayerOverlayProps> = ({children}) => {
         <Template
           togglePlayPause={togglePlay}
           paused={playback === State.Paused}
-          show={showOverlay && !isInPlayer}
+          show={showOverlay && !isInPlayer && !!isLoggedIn}
           isBottomTabOpen={isBottomTabOpen}
           trackObj={trackObj}
           onPress={() => {

@@ -1,4 +1,5 @@
 import {useCallback, useMemo} from 'react';
+import TrackPlayer from 'react-native-track-player';
 import {isSessionValid, login, register} from '_src/services/auth';
 import {delSession} from '_src/services/RESTMethods';
 import {UserActions, UserSelector} from '_src/store/user';
@@ -50,6 +51,7 @@ export function useUser() {
 
   const signOut = useCallback(async () => {
     await delSession();
+    TrackPlayer.stop();
     dispatch(UserActions.clear());
   }, [dispatch]);
 
