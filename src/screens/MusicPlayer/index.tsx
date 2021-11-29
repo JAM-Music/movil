@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 import {Text, Image, Icon} from 'react-native-elements';
 import Content from '_src/components/Content';
 import SeekBar from '_src/components/SeekBar';
@@ -22,7 +22,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({}) => {
   const progress = useProgress();
   const [trackObj, setTrackObj] = useState<Track>();
   const [queue, setQueue] = useState(false);
-
+  const icon = useMemo(() => {
+    if (playback === State.Buffering) return 'loading';
+    return playback === State.Paused ? 'play-arrow' : 'pause';
+  }, [playback]);
   async function getTrack() {
     const trackIndex = await TrackPlayer.getCurrentTrack();
     const trackObject = await TrackPlayer.getTrack(trackIndex);
@@ -83,15 +86,23 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({}) => {
             size={40}
             onPress={() => back()}
           />
-          <Icon
-            name={playback === State.Paused ? 'play-arrow' : 'pause'}
-            tvParallaxProperties
-            reverse
-            containerStyle={style.playIcon}
-            color={R.colors.PRIMARY}
-            onPress={() => controlMusic()}
-            size={40}
-          />
+          {icon === 'loading' ? (
+            <ActivityIndicator
+              color={R.colors.PRIMARY}
+              style={style.playIcon}
+              size={100}
+            />
+          ) : (
+            <Icon
+              name={icon}
+              tvParallaxProperties
+              reverse
+              containerStyle={style.playIcon}
+              color={R.colors.PRIMARY}
+              onPress={() => controlMusic()}
+              size={40}
+            />
+          )}
           <Icon
             name={'skip-next'}
             size={40}
