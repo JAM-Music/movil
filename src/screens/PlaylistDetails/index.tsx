@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {ActivityIndicator, ImageBackground, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import R from '_src/assets/R';
@@ -14,9 +14,6 @@ import {Song} from '_src/utils/types/Songs';
 import style from './PlaylistDetails.style';
 import Content from '_src/components/Content';
 import PlaylistModal from '_src/components/PlaylistModal';
-import {useSelector} from 'react-redux';
-import {PlaylistSelector} from '_src/store/playlists';
-import {RootState} from '_src/store';
 import {NavigationProp} from '@react-navigation/core';
 import {RootScreens} from '_src/utils/types/Screens';
 import {useSongs} from '_src/hooks/useSong';
@@ -30,16 +27,18 @@ const PlaylistDetails: React.FC<PlaylistDetailsProps> = ({
   route,
   navigation,
 }) => {
-  const {
-    playlist: {_id},
-  } = route.params;
-  const playlist = useSelector<RootState, Playlist>(state =>
-    PlaylistSelector(state, _id),
-  );
-  const {loading, addSong} = usePlaylistSongs(_id);
+  const _id = useMemo(() => route.params.playlist._id, [route.params]);
+  const [loading, setLoading] = useState(false);
+  const {addSong, playlist, fetchData} = usePlaylistSongs(_id);
   const {search, results, loading: loadingSearch, noFound} = useSearch();
   const [modal, setModal] = useState(false);
   const {assingSongs} = useSongs();
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData(_id).finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Content fluid>

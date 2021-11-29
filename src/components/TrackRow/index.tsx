@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {RootScreens} from '_src/utils/types/Screens';
 import {Pressable, View} from 'react-native';
 import {Icon, Text} from 'react-native-elements';
 import {Image} from 'react-native-elements/dist/image/Image';
@@ -17,7 +15,6 @@ export type TrackRowProps = {
 
 const TrackRow: React.FC<TrackRowProps> = ({song, playlist, onPress}) => {
   const [modal, setModal] = useState(false);
-  const navigation = useNavigation<NavigationProp<RootScreens>>();
 
   return (
     <Pressable

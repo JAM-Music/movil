@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {Alert, ImageURISource} from 'react-native';
 import {
   createPlaylist,
@@ -64,22 +64,20 @@ export function usePlaylist() {
 }
 
 export function usePlaylistSongs(id?: string) {
-  const [loading, setLoading] = useState(true);
   const playlist = useAppSelector(state => PlaylistSelector(state, id));
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-    getPlaylist(id)
-      .then(p =>
-        dispatch(
-          PlaylistsActions.setSongs({_id: id, songs: p.data.songs || []}),
-        ),
-      )
-      .finally(() => setLoading(false));
-  }, [id, dispatch]);
+  const fetchData = useCallback(
+    async (_id?: string) => {
+      if (!_id) {
+        return;
+      }
+      return getPlaylist(_id).then(p =>
+        dispatch(PlaylistsActions.setSongs({_id, songs: p.data.songs || []})),
+      );
+    },
+    [dispatch],
+  );
 
   const addSong = useCallback(
     async (song: Song) => {
@@ -103,5 +101,5 @@ export function usePlaylistSongs(id?: string) {
     [id, dispatch],
   );
 
-  return {loading, addSong, removeSong};
+  return {addSong, removeSong, playlist, fetchData};
 }
