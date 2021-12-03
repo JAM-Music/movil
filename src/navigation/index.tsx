@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '_src/screens/Login';
@@ -13,16 +13,22 @@ import AlbumDetails from '_src/screens/AlbumDetails';
 import PlaylistDetails from '_src/screens/PlaylistDetails';
 import MusicPlayer from '_src/screens/MusicPlayer';
 import PlayerOverlay from '_src/components/PlayerOverlay';
+import Splash from '_src/screens/Splash';
 
 export type RootNavigationProps = {};
 const Stack = createNativeStackNavigator<RootScreens>();
 
 const RootNavigation: React.FC<RootNavigationProps> = () => {
   const {isLoggedIn, checkSession} = useUser();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkSession();
+    checkSession().then(() => setLoading(false));
   }, [checkSession]);
+
+  if (loading) {
+    return <Splash />;
+  }
 
   return (
     <NavigationContainer>
